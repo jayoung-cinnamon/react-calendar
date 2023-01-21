@@ -4,15 +4,16 @@ import dayjs from "dayjs";
 import weekdayPlugin from "dayjs/plugin/weekday";
 import objectPlugin from "dayjs/plugin/toObject";
 import isTodayPlugin from "dayjs/plugin/isToday";
-
+import DayOfWeek from "dayjs/plugin/weekOfYear";
 const Calendar = () => {
   const current = dayjs().locale({});
-  const weekday = require("dayjs/plugin/weekday");
-  const isoWeek = require("dayjs/plugin/isoWeek");
-  const weekOfYear = require("dayjs/plugin/weekOfYear");
+  // const weekday = require("dayjs/plugin/weekday");
+  // const isoWeek = require("dayjs/plugin/isoWeek");
+  // const weekOfYear = require("dayjs/plugin/weekOfYear");
   dayjs.extend(weekdayPlugin);
   dayjs.extend(objectPlugin);
   dayjs.extend(isTodayPlugin);
+  dayjs.extend(DayOfWeek);
 
   const [currentMonth, setCurrentMonth] = useState(current);
   const [arrayOfDays, setArrayOfDays] = useState([]);
@@ -49,36 +50,79 @@ const Calendar = () => {
         </Week>
       );
     }
-    return <DayOfWeek>{days}</DayOfWeek>;
+    return <WeekRow>{days}</WeekRow>;
   };
+  // monthStart : 현재 달의 시작요일 (0:일요일 )
+  // monthEnd : 현재달의 마지막일
+  // startCalendar : monthStart가 속한 주의 첫 시작일
+  // endCalendar: monthEnd가 속한 주의 마지막일
+  // rows : 1주일 * 4 ~ 5 주
+  // days : 1주일
+  // const thisWeek = current.startOf("month").weekday(0).format();
+  // const lastWeek = current.endOf("month").week();
+  // //이전 월의 마지막날짜
+  // const prevMonth = current.endOf("month").add(-1, "month").format("D");
+  // //다음 월의 마지막 날짜
+  // const nextMonth = current.startOf("month").add(+1, "month").format("ddd");
 
+  // getDays();
+
+  const [allDays, setAllDays] = useState([]);
+  const [today, setToday] = useState(dayjs().get("D"));
   const getDays = () => {
-    //monthStart : 현재 달의 시작요일 (0:일요일 )
-    //monthEnd : 현재달의 마지막일
-    //startCalendar : monthStart가 속한 주의 첫 시작일
-    //endCalendar: monthEnd가 속한 주의 마지막일
-    //rows : 1주일 * 4 ~ 5 주
-    //days : 1주일
-    const monthStart = current.startOf("month").format("d");
-    const monthEnd = current.endOf("month").format("D");
-    const startCalendar = current.startOf("month").format("d");
-    const endCalendar = current.endOf("month").format("d");
-
-    let days = Array.from(new Array(Number(monthEnd)), (x, i) => i + 1);
-    console.log(days);
-    // 빈칸
-    for (let i = 0; i < monthStart; i++) {
-      return <EmptyDay></EmptyDay>;
+    //시작요일 부터 마지막날짜까지
+    const startDate = currentMonth.startOf("month").format("d");
+    const endDate = currentMonth.endOf("month").format("D");
+    const endDateIndex = currentMonth.endOf("month").format("d");
+    console.log(dayjs(), "isToday??");
+    // const startDate = currentMonth.startOf("month").weekday(0);
+    // const endDate = currentMonth.endOf("month").format("D");
+    // const lastMonth = [];
+    // const currentMonth = [];
+    const dateRow = [];
+    for (let i = 0; i < startDate; i++) {
+      dateRow.push("");
     }
-    //이번달 날짜
-    return days.map((item, index) => <Date key={index}>{item}</Date>);
+    for (let i = 1; i <= endDate; i++) {
+      dateRow.push(i);
+    }
+
+    for (let i = endDateIndex; i < 6; i++) {
+      dateRow.push("");
+    }
+
+    setAllDays(dateRow);
   };
 
+  useEffect(() => {
+    getDays();
+  }, [currentMonth]);
+  let allDayRow = [];
+
+  const onClickToday = (item) => {
+    if (item === today) {
+      alert("today!");
+    }
+  };
+
+  const renderDays = () => {
+    allDays.map((item, index) => {
+      item === ""
+        ? allDayRow.push(<EmptyDay key={index}></EmptyDay>)
+        : allDayRow.push(
+            <Day onClick={() => onClickToday(item)} key={index}>
+              {item === today ? `${item}+today!` : item}
+            </Day>
+          );
+    });
+    return <Date>{allDayRow}</Date>;
+  };
+  // getDays();
   return (
     <CalendarContainer>
       {getMonth()}
       {getWeek()}
-      {getDays()}
+      {renderDays()}
     </CalendarContainer>
   );
 };
@@ -114,17 +158,18 @@ const Week = styled.div`
   padding: 3px;
   place-items: center;
 `;
-const DayOfWeek = styled.div`
+const WeekRow = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
 `;
 const Day = styled.div`
   height: 100px;
   border: 1px solid #53a8b6;
+  cursor: pointer;
 `;
 
 const EmptyDay = styled(Day)`
-  background-color: grey;
+  background-color: #d1d1d1;
 `;
 const Date = styled.div`
   display: grid;
