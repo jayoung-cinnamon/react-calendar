@@ -133,7 +133,6 @@ export default Calendar2;
 
 const CalendarContainer = styled.div`
   padding: 50px;
-  border: 1px solid red;
   width: 100%;
 `;
 const Month = styled.div`
@@ -173,7 +172,8 @@ const Day = styled.div`
 `;
 
 const EmptyDay = styled(Day)`
-  background-color: #d1d1d1;
+  background-color: #ede7e7;
+  color: #a8a8a8;
 `;
 const Date = styled.div`
   display: grid;
