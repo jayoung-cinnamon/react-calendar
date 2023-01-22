@@ -74,7 +74,6 @@ const Calendar = () => {
     const startDate = currentMonth.startOf("month").format("d");
     const endDate = currentMonth.endOf("month").format("D");
     const endDateIndex = currentMonth.endOf("month").format("d");
-    console.log(dayjs(), "isToday??");
     // const startDate = currentMonth.startOf("month").weekday(0);
     // const endDate = currentMonth.endOf("month").format("D");
     // const lastMonth = [];
@@ -111,7 +110,7 @@ const Calendar = () => {
         ? allDayRow.push(<EmptyDay key={index}></EmptyDay>)
         : allDayRow.push(
             <Day onClick={() => onClickToday(item)} key={index}>
-              {item === today ? `${item}+today!` : item}
+              {item}
             </Day>
           );
     });
