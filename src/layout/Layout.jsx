@@ -16,6 +16,9 @@ const LayoutContainer = styled.div`
   height: 100vh;
   flex-direction: column;
   border: 1px solid red;
+  .test {
+    border: 1px solid red;
+  }
 `;
 const MainPageContainer = styled.div`
   display: flex;

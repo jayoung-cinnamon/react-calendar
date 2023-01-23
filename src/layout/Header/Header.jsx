@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 const Header = () => {
   <HeaderContainer>
-    header~! header~! header~! header~!
     <Link to="/">
       <div>1</div>
     </Link>

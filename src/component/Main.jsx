@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import Calendar from "../component/Calendar";
+import Calendar from "./Calendar";
 
 const Main = () => {
   return (
@@ -13,5 +13,5 @@ const Main = () => {
 export default Main;
 const MainContainer = styled.div`
   /* min-width: 1024px; */
-  padding: 50px;
+  /* padding: 50px; */
 `;
