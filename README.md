@@ -1,3 +1,12 @@
+### CSS 추가
+
+
+https://user-images.githubusercontent.com/68357066/214477444-767fa7a8-35ec-4f9f-b1b4-adcdcc56824e.mov
+
+
+
+
+
 ### 첫번째 수정
 해당 월의 날짜만 받아옴
 
