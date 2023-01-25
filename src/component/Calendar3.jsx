@@ -13,13 +13,7 @@ const Calendar2 = () => {
   dayjs.extend(DayOfWeek);
   const current = dayjs();
   const [currentMonth, setCurrentMonth] = useState(current);
-  const [allDays, setAllDays] = useState([]);
-  const [today, setToday] = useState(currentMonth);
-  const allFormat = "YYYYMMDD";
-  //날짜
-  const dayFormat = "D";
-  //요일
-  const dateFormat = "d";
+  const [selected, setSelected] = useState();
   //dayjs()에서 add로 저번달, 다음달 month정보를 받아와 setState해주기
   const prevMonth = () => {
     const prev = currentMonth.add(-1, "month");
@@ -29,15 +23,18 @@ const Calendar2 = () => {
     const next = currentMonth.add(1, "month");
     setCurrentMonth(next);
   };
+  const goToday = () => {
+    setCurrentMonth(current);
+  };
 
   const getMonth = () => {
     const dateFormat = "M";
     const yearFormat = "YYYY";
     return (
       <Month>
-        <button onClick={prevMonth}> prev </button>
+        <button onClick={prevMonth}> 이전 </button>
         {currentMonth.format(yearFormat)}년{currentMonth.format(dateFormat)}월
-        <button onClick={nextMonth}> next </button>
+        <button onClick={nextMonth}> 다음 </button>
       </Month>
     );
   };
@@ -68,7 +65,15 @@ const Calendar2 = () => {
     });
     return <WeekRow>{dateComponent}</WeekRow>;
   };
-
+  const onClickSelect = ({ item }) => {
+    console.log(item.format("D"));
+  };
+  const onClickNextDisabled = () => {
+    setCurrentMonth(current.add(1, "month"));
+  };
+  const onClickPrevDisabled = () => {
+    setCurrentMonth(current.add(-1, "month"));
+  };
   let preDayRow = [];
   let currentDayRow = [];
   let nextDayRow = [];
@@ -125,10 +130,12 @@ const Calendar2 = () => {
       }
     }
     const prevComponent = preDayRow.map((item, index) => (
-      <EmptyDay key={index}>{item}</EmptyDay>
+      <EmptyDay onClick={onClickPrevDisabled} key={index}>
+        {item}
+      </EmptyDay>
     ));
     const currentComponent = currentDayRow.map((item, index) => (
-      <Day key={index}>
+      <Day onClick={() => onClickSelect({ item })} key={index}>
         {item.isToday() ? (
           <Today className="">{item.format(dayFormat)}</Today>
         ) : (
@@ -137,7 +144,9 @@ const Calendar2 = () => {
       </Day>
     ));
     const nextComponent = nextDayRow.map((item, index) => (
-      <EmptyDay key={index}>{item}</EmptyDay>
+      <EmptyDay onClick={onClickNextDisabled} key={index}>
+        {item}
+      </EmptyDay>
     ));
     return (
       <Date>
@@ -155,6 +164,7 @@ const Calendar2 = () => {
 
   return (
     <CalendarContainer>
+      <GoToday onClick={goToday}>현재달로</GoToday>
       {getMonth()}
       {getWeek()}
       {getDay()}
@@ -167,6 +177,15 @@ export default Calendar2;
 const CalendarContainer = styled.div`
   padding: 50px;
   width: 100%;
+`;
+
+const GoToday = styled.button`
+  border: none;
+  border-radius: 100%;
+  font-size: 12px;
+  color: gray;
+  height: 25px;
+  cursor: pointer;
 `;
 const Month = styled.div`
   display: flex;
@@ -182,7 +201,7 @@ const Month = styled.div`
     line-height: 0.3;
     height: 30px;
     color: white;
-    font-size: 18px;
+    font-size: 10px;
     cursor: pointer;
     background: #79c2d0;
   }
