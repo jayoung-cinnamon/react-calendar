@@ -13,7 +13,7 @@ const Calendar2 = () => {
   dayjs.extend(DayOfWeek);
   const current = dayjs();
   const [currentMonth, setCurrentMonth] = useState(current);
-  const [selected, setSelected] = useState();
+  const [selected, setSelected] = useState(false);
   //dayjs()에서 add로 저번달, 다음달 month정보를 받아와 setState해주기
   const prevMonth = () => {
     const prev = currentMonth.add(-1, "month");
@@ -65,10 +65,15 @@ const Calendar2 = () => {
     });
     return <WeekRow>{dateComponent}</WeekRow>;
   };
-  const onClickSelect = ({ item }) => {
-    setSelected(item.format("D"));
+  const onClickSelect = (item) => {
+    let result = item.format("YYYYMMDD");
+    setSelected(result);
   };
-
+  // let isSelected =
+  //   selected.format("YYYYMMDD") === currentMonth.format("YYYYMMDD");
+  useEffect(() => {
+    console.log(selected);
+  }, [selected]);
   let preDayRow = [];
   let currentDayRow = [];
   let nextDayRow = [];
@@ -130,13 +135,19 @@ const Calendar2 = () => {
       </EmptyDay>
     ));
     const currentComponent = currentDayRow.map((item, index) => (
-      <Day onClick={() => onClickSelect({ item })} key={index}>
-        {item.isToday() ? (
-          <Today className="">{item.format(dayFormat)}</Today>
-        ) : (
-          item.format(dayFormat)
-        )}
-      </Day>
+      <div
+        className={selected === item.format("YYYYMMDD") ? "selectDay" : ""}
+        onClick={() => onClickSelect(item)}
+        key={index}
+      >
+        <Day>
+          {item.isToday() ? (
+            <span className="today">{item.format(dayFormat)}</span>
+          ) : (
+            <span>{item.format(dayFormat)}</span>
+          )}
+        </Day>
+      </div>
     ));
     const nextComponent = nextDayRow.map((item, index) => (
       <EmptyDay onClick={nextMonth} key={index}>
@@ -172,6 +183,9 @@ export default Calendar2;
 const CalendarContainer = styled.div`
   padding: 50px;
   width: 100%;
+  .selectDay {
+    background-color: #ade1ec;
+  }
 `;
 
 const GoToday = styled.button`
@@ -222,6 +236,9 @@ const Day = styled.div`
   height: 100px;
   border: 1px solid #53a8b6;
   cursor: pointer;
+  .today::after {
+    content: "❣️";
+  }
 `;
 
 const EmptyDay = styled(Day)`
