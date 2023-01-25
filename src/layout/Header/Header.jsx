@@ -18,5 +18,4 @@ const HeaderContainer = styled.div`
   position: sticky;
   top: 0;
   height: 60px;
-  border: 1px solid red;
 `;

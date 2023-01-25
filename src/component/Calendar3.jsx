@@ -25,16 +25,22 @@ const Calendar2 = () => {
   };
   const goToday = () => {
     setCurrentMonth(current);
+    setSelected(current.format("YYYYMMDD"));
   };
 
   const getMonth = () => {
-    const dateFormat = "M";
     const yearFormat = "YYYY";
+    const dateFormat = "MMMM";
     return (
       <Month>
-        <button onClick={prevMonth}> 이전 </button>
-        {currentMonth.format(yearFormat)}년{currentMonth.format(dateFormat)}월
-        <button onClick={nextMonth}> 다음 </button>
+        <MonthWrapper>
+          <span className="month">
+            {currentMonth.format(dateFormat)}
+            <button onClick={prevMonth} className="prev"></button>
+            <button onClick={nextMonth} className="next"></button>
+          </span>
+          <span className="year">{currentMonth.format(yearFormat)}</span>
+        </MonthWrapper>
       </Month>
     );
   };
@@ -69,11 +75,7 @@ const Calendar2 = () => {
     let result = item.format("YYYYMMDD");
     setSelected(result);
   };
-  // let isSelected =
-  //   selected.format("YYYYMMDD") === currentMonth.format("YYYYMMDD");
-  useEffect(() => {
-    console.log(selected);
-  }, [selected]);
+
   let preDayRow = [];
   let currentDayRow = [];
   let nextDayRow = [];
@@ -161,7 +163,6 @@ const Calendar2 = () => {
         {nextComponent}
       </Date>
     );
-    // return preDayRow, currentDayRow, nextDayRow;
   };
 
   useEffect(() => {
@@ -170,7 +171,7 @@ const Calendar2 = () => {
 
   return (
     <CalendarContainer>
-      <GoToday onClick={goToday}>현재달로</GoToday>
+      <GoToday onClick={goToday}>Today</GoToday>
       {getMonth()}
       {getWeek()}
       {getDay()}
@@ -182,9 +183,12 @@ export default Calendar2;
 
 const CalendarContainer = styled.div`
   padding: 50px;
-  width: 100%;
+  min-width: 700px;
+  max-width: 1024px;
+  position: relative;
   .selectDay {
-    background-color: #ade1ec;
+    background-color: #146aad;
+    color: white;
   }
 `;
 
@@ -199,55 +203,105 @@ const GoToday = styled.button`
 const Month = styled.div`
   display: flex;
   justify-content: space-around;
+  border-bottom: 4px solid black;
+  color: black;
+`;
+const MonthWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
   margin-bottom: 20px;
-  font-size: 22px;
-  font-weight: 800;
-  color: #5585b5;
-  button {
-    border: none;
-    border-radius: 100%;
+  .month {
+    width: 100%;
+    font-size: 100px;
+    letter-spacing: 5px;
+    font-weight: 900;
+  }
+
+  .year {
+    font-size: 20px;
+    font-weight: 900;
+  }
+  .prev,
+  .next {
+    position: relative;
     width: 30px;
-    line-height: 0.3;
     height: 30px;
-    color: white;
-    font-size: 10px;
+    outline: none;
+    border: none;
+    background-color: transparent;
+    box-shadow: none;
     cursor: pointer;
-    background: #79c2d0;
+  }
+
+  .prev::after {
+    position: absolute;
+    left: -10;
+    top: 1;
+    content: "";
+    width: 10px; /* 사이즈 */
+    height: 10px; /* 사이즈 */
+    border-top: 2px solid #000; /* 선 두께 */
+    border-right: 2px solid #000; /* 선 두께 */
+    transform: rotate(225deg); /* 각도 */
+  }
+  .next::after {
+    position: absolute;
+    right: 0;
+    top: 1;
+    content: "";
+    width: 10px; /* 사이즈 */
+    height: 10px; /* 사이즈 */
+    border-top: 2px solid #000; /* 선 두께 */
+    border-right: 2px solid #000; /* 선 두께 */
+    transform: rotate(45deg); /* 각도 */
   }
 `;
 const Week = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  border-bottom: 1px solid #79c2d0;
-  padding: 3px;
+  padding: 20px;
   place-items: center;
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 9px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 const WeekRow = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   .sun {
-    color: red;
+    color: #ee1f1fac;
   }
   .sat {
-    color: blue;
+    color: #2828f6;
   }
 `;
 const Day = styled.div`
   height: 100px;
-  border: 1px solid #53a8b6;
+  border: 1px solid #e1dfdf;
+  height: 80px;
+  font-size: 20px;
+  font-weight: 900;
+  display: flex;
+  justify-content: center;
+  padding-top: 10px;
+  position: relative;
   cursor: pointer;
   .today::after {
     content: "❣️";
+    position: absolute;
+    top: 10px;
   }
 `;
 
 const EmptyDay = styled(Day)`
-  background-color: #ede7e7;
-  color: #a8a8a8;
+  background-color: #efefef;
+  color: #ffffff;
 `;
-const Today = styled(Day)`
-  background-color: #ffa8b7;
-`;
+
 const Date = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);

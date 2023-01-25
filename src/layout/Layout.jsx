@@ -15,7 +15,6 @@ const LayoutContainer = styled.div`
   display: flex;
   height: 100vh;
   flex-direction: column;
-  border: 1px solid red;
   .test {
     border: 1px solid red;
   }
