@@ -66,14 +66,9 @@ const Calendar2 = () => {
     return <WeekRow>{dateComponent}</WeekRow>;
   };
   const onClickSelect = ({ item }) => {
-    console.log(item.format("D"));
+    setSelected(item.format("D"));
   };
-  const onClickNextDisabled = () => {
-    setCurrentMonth(current.add(1, "month"));
-  };
-  const onClickPrevDisabled = () => {
-    setCurrentMonth(current.add(-1, "month"));
-  };
+
   let preDayRow = [];
   let currentDayRow = [];
   let nextDayRow = [];
@@ -130,7 +125,7 @@ const Calendar2 = () => {
       }
     }
     const prevComponent = preDayRow.map((item, index) => (
-      <EmptyDay onClick={onClickPrevDisabled} key={index}>
+      <EmptyDay onClick={prevMonth} key={index}>
         {item}
       </EmptyDay>
     ));
@@ -144,7 +139,7 @@ const Calendar2 = () => {
       </Day>
     ));
     const nextComponent = nextDayRow.map((item, index) => (
-      <EmptyDay onClick={onClickNextDisabled} key={index}>
+      <EmptyDay onClick={nextMonth} key={index}>
         {item}
       </EmptyDay>
     ));
